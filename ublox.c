@@ -105,6 +105,11 @@ void ublox_init(){
     send_ublox_packet(&msgcfgmsg);
   } while (!ublox_wait_for_ack());
 
+  msgcfgmsg.data.cfgmsg.msgID = 0x4;
+  do {
+    send_ublox_packet(&msgcfgmsg);
+  } while (!ublox_wait_for_ack());
+
   msgcfgmsg.data.cfgmsg.msgID = 0x6;
   do {
     send_ublox_packet(&msgcfgmsg);
@@ -179,6 +184,8 @@ void ublox_handle_packet(uBloxPacket *pkt) {
       currentGPSData.lat_raw = pkt->data.navposllh.lat;
       currentGPSData.lon_raw = pkt->data.navposllh.lon;
       currentGPSData.alt_raw = pkt->data.navposllh.hMSL;
+    } else if (pkt->header.messageClass == 0x01 && pkt->header.messageId == 0x04){
+      currentGPSData.hdop_raw = pkt->data.navdop.hDOP;
     } else if (pkt->header.messageClass == 0x01 && pkt->header.messageId == 0x06){
       currentGPSData.fix = pkt->data.navsol.gpsFix;
       currentGPSData.sats_raw = pkt->data.navsol.numSV;

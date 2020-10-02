@@ -12,6 +12,7 @@ typedef struct {
   int32_t alt_raw;
   int32_t speed_raw;
   uint8_t sats_raw;
+  uint16_t hdop_raw;
   uint8_t seconds;
   uint8_t minutes;
   uint8_t hours;
@@ -113,6 +114,18 @@ typedef struct {
 } uBloxNAVTIMEUTCPayload;
 
 typedef struct {
+  uint32_t iTOW;		//GPS Millisecond Time of Week [- ms]
+  uint16_t gDOP;		//Geometric DOP [0.01 -]
+  uint16_t pDOP;		//Position DOP [0.01 -]
+  uint16_t tDOP;		//Time DOP [0.01 -]
+  uint16_t vDOP;		//Vertical DOP [0.01 -]
+  uint16_t hDOP;		//Horizontal DOP [0.01 -]
+  uint16_t nDOP;		//Northing DOP [0.01 -]
+  uint16_t eDOP;		//Easting DOP [0.01 -]
+
+} uBloxNAVDOPPayload;
+
+typedef struct {
   uint8_t portID;		//Port Identifier Number (see Serial [- -]
   uint8_t reserved1;		//Reserved [- -]
   uint16_t txReady;		//TX ready PIN configuration [- -]
@@ -188,6 +201,7 @@ typedef union {
   uBloxNAVPOSLLHPayload navposllh;
   uBloxNAVSOLPayload navsol;
   uBloxNAVTIMEUTCPayload navtimeutc;
+  uBloxNAVDOPPayload navdop;
   uBloxACKACKayload ackack;
   uBloxCFGRSTPayload cfgrst;
   uBloxCFGRXMPayload cfgrxm;
