@@ -12,12 +12,12 @@
 
 
 //************GLOBAL Settings*****************
-#define TRANSMIT_FREQUENCY  434.7375f //Mhz middle frequency
+#define TRANSMIT_FREQUENCY  434.660f //Mhz middle frequency
 #define BAUD_RATE  100 // RTTY & MFSK Baud rate.
                        // NOTE: Currently supported MFSK baud rates with horus-gui are 50 and 100 baud.
 
 // Modulation Settings - Comment out a line below to enable/disable a modulation.
-#define RTTY_ENABLED 1
+//#define RTTY_ENABLED 1
 #define MFSK_4_ENABLED 1
 
 // TX Power
@@ -40,7 +40,7 @@
 #define TX_DELAY  1000
 
 //*************RTTY SETTINGS******************
-#define CALLSIGN "SUNBURNER" // put your RTTY callsign here, max. 15 characters
+#define CALLSIGN "N0CALL" // put your RTTY callsign here, max. 15 characters
 #define RTTY_DEVIATION 0x3	// RTTY shift = RTTY_DEVIATION x 270Hz
 #define RTTY_7BIT   1 // if 0 --> 5 bits
 #define RTTY_USE_2_STOP_BITS   1
@@ -50,13 +50,13 @@
 // Binary Payload ID (0 though 255) - For your own flights, you will need to choose a payload ID,
 // and set this value to that. 
 // Refer to the payload ID list here: https://github.com/projecthorus/horusdemodlib/blob/master/payload_id_list.txt
-#define BINARY_PAYLOAD_ID 11 // Payload ID for use in Binary packets
+#define BINARY_PAYLOAD_ID 0 // Payload ID for use in Binary packets
 
 
 // If enabled, transmit incrementing tones in the 'idle' period between packets.
 // This will only function if ONLY MFSK is enabled.
 // Note, you need to COMMENT this line out, not just set it to 0
-// #define CONTINUOUS_MODE 1
+#define CONTINUOUS_MODE 1
 
 
 //***********Other Settings ******************
