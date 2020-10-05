@@ -72,7 +72,7 @@ volatile uint8_t disable_armed = 0;
 // Binary Packet Format
 // Note that we need to pack this to 1-byte alignment, hence the #pragma flags below
 // Refer: https://gcc.gnu.org/onlinedocs/gcc-4.4.4/gcc/Structure_002dPacking-Pragmas.html
-#pragma pack(push,1) 
+#pragma pack(push,1)
 struct TBinaryPacket
 {
 uint8_t   PayloadID;
@@ -142,7 +142,7 @@ void TIM2_IRQHandler(void) {
         adc_bottom = ADCVal[1] * 1.1; // dynamical reference for power down level
       }
     }
-      
+
     if (tx_on) {
       // RTTY Symbol selection logic.
       if(current_mode == RTTY){
@@ -156,7 +156,7 @@ void TIM2_IRQHandler(void) {
               // Reset the TX Delay counter, which is decremented at the symbol rate.
               tx_on_delay = TX_DELAY / (1000/BAUD_RATE);
               tx_enable = 0;
-              
+
               // If we're not in continuous mode, disable the transmitter now.
               #ifndef CONTINUOUS_MODE
                 radio_disable_tx();
@@ -194,7 +194,6 @@ void TIM2_IRQHandler(void) {
               #ifndef CONTINUOUS_MODE
                 radio_disable_tx();
               #endif
-              
           } else {
             // We've now advanced to the next byte, grab the first symbol from it.
             #ifdef MFSK_4_ENABLED
@@ -208,7 +207,6 @@ void TIM2_IRQHandler(void) {
         if(mfsk_symbol != -1){
           radio_rw_register(0x73, (uint8_t)mfsk_symbol, 1);
         }
-        
 
       } else if (current_mode == FSK_2) {
         // 2FSK Symbol Selection Logic
@@ -225,7 +223,6 @@ void TIM2_IRQHandler(void) {
               // Reset the TX Delay counter, which is decremented at the symbol rate.
               tx_on_delay = TX_DELAY / (1000/BAUD_RATE);
               tx_enable = 0;
-              
           } else {
             // We've now advanced to the next byte, grab the first symbol from it.
             mfsk_symbol = send_2fsk(tx_buffer[current_mfsk_byte]);
@@ -235,11 +232,9 @@ void TIM2_IRQHandler(void) {
         if(mfsk_symbol != -1){
           radio_rw_register(0x73, (uint8_t)mfsk_symbol, 1);
         }
-      } else{
-        // Ummmm. 
       }
     }else{
-      // TX is off 
+      // TX is off
       // If we are don't have RTTY enabled, and if we have CONTINUOUS_MODE set,
       // transmit continuous MFSK symbols.
       #ifndef RTTY_ENABLED
@@ -324,7 +319,7 @@ int main(void) {
 
   // Why do we have to do this again?
   spi_init();
-  radio_set_tx_frequency(TRANSMIT_FREQUENCY);   
+  radio_set_tx_frequency(TRANSMIT_FREQUENCY);
   radio_rw_register(0x71, 0x00, 1);
   init_timer(BAUD_RATE);
 
@@ -355,12 +350,16 @@ int main(void) {
         } else if (current_mode == RTTY){
           // We've just transmitted a RTTY packet, now configure for 4FSK.
           current_mode = MFSK;
+
+          // Grab telemetry information.
+          collect_telemetry_data();
+
           #if defined(MFSK_4_ENABLED) || defined(MFSK_16_ENABLED)
             radio_enable_tx();
             send_mfsk_packet();
           #endif
         } else {
-          // We've finished the 4FSK transmission, grab new data.
+          // We've finished the 4FSK transmission.
           current_mode = STARTUP;
           radio_disable_tx();
         }
@@ -407,9 +406,8 @@ void send_rtty_packet() {
   uint32_t lat_fl = (uint32_t) abs(abs(gpsData.lat_raw) - lat_d * 10000000) / 1000;
   uint8_t lon_d = (uint8_t) abs(gpsData.lon_raw / 10000000);
   uint32_t lon_fl = (uint32_t) abs(abs(gpsData.lon_raw) - lon_d * 10000000) / 1000;
- 
+
   // Produce a RTTY Sentence (Compatible with the existing HORUS RTTY payloads)
-  
   sprintf(buf_rtty, "\n\n\n\n$$$$$%s,%d,%02u:%02u:%02u,%s%d.%04ld,%s%d.%04ld,%ld,%d,%d,%d,%d",
         callsign,
         send_count,
@@ -422,7 +420,7 @@ void send_rtty_packet() {
         voltage*10,
         si4032_temperature
         );
-  
+
   // Calculate and append CRC16 checksum to end of sentence.
   CRC_rtty = string_CRC16_checksum(buf_rtty + 9);
   sprintf(buf_rtty, "%s*%04X\n", buf_rtty, CRC_rtty & 0xffff);
@@ -491,7 +489,7 @@ void send_mfsk_packet(){
   #endif
 
 
-  
+
   #ifdef CONTINUOUS_MODE
     // Write Preamble characters into mfsk buffer.
     sprintf(buf_mfsk, "\x1b\x1b\x1b\x1b");
