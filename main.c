@@ -97,6 +97,7 @@ void collect_telemetry_data();
 void send_rtty_packet();
 void send_mfsk_packet();
 uint16_t gps_CRC16_checksum (char *string);
+void send_hardware_sleep_timer_done();
 
 
 /**
@@ -294,6 +295,7 @@ int main(void) {
 
   delay_init();
   ublox_init();
+  init_hardware_sleep_timer();
 
   GPIO_SetBits(GPIOB, RED);
   // NOTE - Green LED is inverted. (Reset to activate, Set to deactivate)
@@ -546,8 +548,17 @@ void send_mfsk_packet(){
   tx_on = 1;
 }
 
+void send_hardware_sleep_timer_done()
+{
+  //send a pulse to the DONE port of the timer.
 
+  GPIO_SetBits(GPIOA, 8);
 
+	// Brief delay
+	 _delay_ms(1);
+
+   GPIO_ResetBits(GPIOA, 8);
+}
 
 #ifdef  DEBUG
 void assert_failed(uint8_t* file, uint32_t line)

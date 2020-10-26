@@ -18,6 +18,8 @@ void reset_gps();
 void spi_init();
 
 void spi_deinit();
+
+void init_hardware_sleep_timer();
 #ifdef __cplusplus
 }
 #endif

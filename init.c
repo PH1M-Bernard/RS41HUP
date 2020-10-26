@@ -113,6 +113,16 @@ void reset_gps()
 	GPIO_Init(GPIOA, &GPIO_Conf);
 }
 
+void init_hardware_sleep_timer()
+{
+	// Force timers DONE pin low
+	GPIO_Conf.GPIO_Pin = GPIO_Pin_8;
+	GPIO_Conf.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_Conf.GPIO_Speed = GPIO_Speed_10MHz;
+	GPIO_Init(GPIOA, &GPIO_Conf);
+	GPIO_ResetBits(GPIOA, 8);
+}
+
 void init_port()
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
