@@ -30,7 +30,7 @@
 // IO Pins Definitions. The state of these pins are initilised in init.c
 #define GREEN  GPIO_Pin_7 // Inverted
 #define RED  GPIO_Pin_8 // Non-Inverted (?)
-
+#define PORT_TIMER_DONE GPIO_Pin_8
 
 // Transmit Modulation Switching
 #define STARTUP 0
@@ -365,6 +365,7 @@ int main(void) {
           // We've finished the 4FSK transmission, grab new data.
           current_mode = STARTUP;
           radio_disable_tx();
+          send_hardware_sleep_timer_done();
         }
     } else {
       NVIC_SystemLPConfig(NVIC_LP_SEVONPEND, DISABLE);
@@ -552,12 +553,12 @@ void send_hardware_sleep_timer_done()
 {
   //send a pulse to the DONE port of the timer.
 
-  GPIO_SetBits(GPIOA, 8);
+  GPIO_SetBits(GPIOA, PORT_TIMER_DONE);
 
 	// Brief delay
 	 _delay_ms(1);
 
-   GPIO_ResetBits(GPIOA, 8);
+   GPIO_ResetBits(GPIOA, PORT_TIMER_DONE);
 }
 
 #ifdef  DEBUG

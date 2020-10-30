@@ -120,7 +120,7 @@ void init_hardware_sleep_timer()
 	GPIO_Conf.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Conf.GPIO_Speed = GPIO_Speed_10MHz;
 	GPIO_Init(GPIOA, &GPIO_Conf);
-	GPIO_ResetBits(GPIOA, 8);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_8);
 }
 
 void init_port()
